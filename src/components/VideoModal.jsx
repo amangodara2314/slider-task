@@ -26,7 +26,7 @@ export default function VideoModal({
   const [videoDuration, setVideoDuration] = useState(0);
   const baseUrl = import.meta.env.VITE_BACKEND_URL;
   const videoRef = useRef();
-
+  const url = window.location.href;
   const handleCommentSubmit = async (videoId) => {
     if (!comment.trim()) return;
     setCommenting(true);
@@ -174,7 +174,9 @@ export default function VideoModal({
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  const videoUrl = baseUrl + videos[modalIndex].src;
+                  const videoUrl = url.endsWith("/")
+                    ? url + "video/" + videos[modalIndex]._id
+                    : url + "/video/" + videos[modalIndex]._id;
                   navigator.clipboard
                     .writeText(videoUrl)
                     .then(() => {
