@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import {
   X,
   ChevronLeft,
@@ -22,7 +22,10 @@ export default function VideoModal({
   const [openComments, setOpenComments] = useState(null);
   const [comment, setComment] = useState("");
   const [commenting, setCommenting] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [videoDuration, setVideoDuration] = useState(0);
   const baseUrl = import.meta.env.VITE_BACKEND_URL;
+  const videoRef = useRef();
 
   const handleCommentSubmit = async (videoId) => {
     if (!comment.trim()) return;
@@ -35,6 +38,27 @@ export default function VideoModal({
       setCommenting(false);
     }
   };
+
+  const handleLoadedMetadata = () => {
+    if (videoRef.current) {
+      setVideoDuration(videoRef.current.duration);
+    }
+  };
+
+  const updateProgressBar = () => {
+    if (videoRef.current) {
+      const currentProgress =
+        (videoRef.current.currentTime / videoDuration) * 100;
+      setProgress(currentProgress);
+    }
+  };
+
+  useEffect(() => {
+    setProgress(0);
+    if (videoRef.current) {
+      videoRef.current.currentTime = 0;
+    }
+  }, [modalIndex]);
 
   return (
     <div
@@ -79,15 +103,25 @@ export default function VideoModal({
           )}
 
           <div className="relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-full h-[1px] bg-gray-700 z-10">
+              <div
+                className="h-full bg-red-500 transition-all"
+                style={{ width: `${progress}%` }}
+              ></div>
+            </div>
+
             <video
               className="w-[300px] sm:w-[350px] aspect-[9/16] rounded-lg object-cover cursor-pointer"
               src={baseUrl + videos[modalIndex].src}
+              ref={videoRef}
               autoPlay
               onClick={(e) => {
                 e.stopPropagation();
                 e.target.paused ? e.target.play() : e.target.pause();
               }}
               loop
+              onTimeUpdate={updateProgressBar}
+              onLoadedMetadata={handleLoadedMetadata}
             />
 
             {openComments && (
