@@ -21,48 +21,35 @@ export default function VideoGrid({
           transform: `translateX(-${startIndex * 272}px)`,
         }}
       >
-        {loading &&
-          Array(3)
-            .fill(null)
-            .map((_, idx) => (
+        {Array(totalCount ? totalCount : 6)
+          .fill(null)
+          .map((_, idx) => {
+            const video = videos[idx];
+            return video ? (
               <div
-                key={idx}
-                className="w-64 flex-shrink-0 mx-2 flex items-center justify-center aspect-[9/16]"
+                key={video._id || idx}
+                className="w-64 flex-shrink-0 mx-2 cursor-pointer"
+                onClick={() => {
+                  setModalIndex(idx);
+                }}
               >
-                {console.log(idx)}
-                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white"></div>
+                <VideoPreview
+                  containerRef={containerRef}
+                  src={baseUrl + video.src}
+                  title={video.title}
+                  likeCount={video.likeCount}
+                  liked={video.liked}
+                />
               </div>
-            ))}
-        {!loading &&
-          Array(totalCount)
-            .fill(null)
-            .map((_, idx) => {
-              const video = videos[idx];
-              return video ? (
-                <div
-                  key={video._id || idx}
-                  className="w-64 flex-shrink-0 mx-2 cursor-pointer"
-                  onClick={() => {
-                    setModalIndex(idx);
-                  }}
-                >
-                  <VideoPreview
-                    containerRef={containerRef}
-                    src={baseUrl + video.src}
-                    title={video.title}
-                    likeCount={video.likeCount}
-                    liked={video.liked}
-                  />
-                </div>
-              ) : (
-                <div key={idx}>
-                  <SkeletonPreview
-                    loadMoreVideos={loadMoreVideos}
-                    loading={loading}
-                  />
-                </div>
-              );
-            })}
+            ) : (
+              <div key={idx}>
+                <SkeletonPreview
+                  loadMoreVideos={loadMoreVideos}
+                  loading={loading}
+                />
+              </div>
+            );
+          })}
 
         {loading && (
           <div className="w-64 flex-shrink-0 mx-2 flex items-center justify-center aspect-[9/16]">

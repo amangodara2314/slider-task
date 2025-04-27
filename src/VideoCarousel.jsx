@@ -12,6 +12,7 @@ export default function VideoCarousel() {
     loadMoreVideos,
     handleLike,
     handleComment,
+    page,
   } = useVideoData();
 
   const [startIndex, setStartIndex] = useState(0);
@@ -55,6 +56,7 @@ export default function VideoCarousel() {
           loading={loading}
           loadMoreVideos={loadMoreVideos}
           setModalIndex={setModalIndex}
+          page={page}
         />
 
         <button

@@ -101,5 +101,6 @@ export default function useVideoData() {
     loadMoreVideos,
     handleLike,
     handleComment,
+    page,
   };
 }
