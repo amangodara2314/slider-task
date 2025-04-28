@@ -40,6 +40,28 @@ export default function VideoCarousel() {
 
   return (
     <div className="relative w-full py-6">
+      <div className="w-full">
+        <div className="text-center text-wrap">
+          If the initial loading takes time. Please be patient as the backend is
+          deployed on a free tier on render.
+          <br />
+          <a
+            className="underline text-blue-500"
+            href="https://github.com/amangodara2314/slider-task"
+            target="_blank"
+          >
+            Frontend Code
+          </a>{" "}
+          |{" "}
+          <a
+            className="underline text-blue-500"
+            href="https://github.com/amangodara2314/slider-task-backend"
+            target="_blank"
+          >
+            Backend Code
+          </a>
+        </div>
+      </div>
       <div className="flex justify-center items-center gap-1 mt-16">
         <button
           onClick={prevSlide}
